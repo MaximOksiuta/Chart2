@@ -11,6 +11,7 @@ import com.example.chart2.database.GraphicsDataType
 import com.example.chart2.database.Item
 import com.example.chart2.database.ItemDao
 import com.example.chart2.models.RVItemData
+import com.example.chart2.models.StatesWithDate
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,10 +24,12 @@ class ViewModel @ViewModelInject constructor(private val dao: ItemDao): ViewMode
     val dataLiveData2: LiveData<List<GraphicsDataType>> = _dataLiveData2
     private val _dataLiveData3 = MutableLiveData<List<RVItemData>>()
     val dataLiveData3: LiveData<List<RVItemData>> = _dataLiveData3
+    private val _dataLiveData4 = MutableLiveData<List<StatesWithDate>>()
+    val dataLiveData4: LiveData<List<StatesWithDate>> = _dataLiveData4
 
     fun getDataForGraphicsCount(fromDate: Long, toDate: Long){
         viewModelScope.launch {
-            dao.getAllInRangeWithSum(fromDate, toDate).collect {
+            dao.getAllInRangeWithSum(fromDate, toDate).collectLatest {
                 _dataLiveData1.postValue(it)
             }
         }
@@ -63,6 +66,14 @@ class ViewModel @ViewModelInject constructor(private val dao: ItemDao): ViewMode
             val item = dao.getItemById(id)
             val newItem = Item(id = item.id, name = item.name, category = item.category, price= item.price, date = item.date, state = state)
             dao.updateState(newItem)
+        }
+    }
+
+    fun getStatesWithDate(){
+        viewModelScope.launch {
+            dao.getAllStatesWithDate().collectLatest {
+                _dataLiveData4.postValue(it)
+            }
         }
     }
 }

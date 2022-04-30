@@ -9,5 +9,15 @@ class HelperMethods {
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             return sdf.format(millis)
         }
+
+        fun convertDateToMillis(date: String): Long{
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            return sdf.parse(date).time
+        }
+
+        fun convertMillisToDateMills(millis: Long): Long{
+            val tmp = convertMillisToDate(millis)
+            return convertDateToMillis(tmp)
+        }
     }
 }

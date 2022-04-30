@@ -2,10 +2,14 @@ package com.example.chart2.database
 
 import androidx.room.*
 import com.example.chart2.models.RVItemData
+import com.example.chart2.models.StatesWithDate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
+
+    @Query("SELECT state, date FROM Item")
+    fun getAllStatesWithDate(): Flow<List<StatesWithDate>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addItem(item: Item): Long
